@@ -1,0 +1,11 @@
+.home_intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center ;
+    width: 100%;
+}
+
+.home_intro__button {
+    margin: 24px 0;
+}

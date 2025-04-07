@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
+import Button from "../Button/Button";
+import TextInput from "../TextInput/TextInput";
+import { UserContext } from "../../context/UserContext";
 
 type User = {
     AccessToken: string;
@@ -9,6 +12,7 @@ type User = {
     IdToken: string;
     RefreshToken: string;
     TokenType: string;
+    email: string;
 };
 
 async function signIn({
@@ -33,10 +37,15 @@ async function signIn({
     if (!response.ok) throw new Error("Failed on sign in request");
 
     const jsonResponse = await response.json();
-    return jsonResponse.response.AuthenticationResult;
+    return {
+        ...jsonResponse.response.AuthenticationResult,
+        email: jsonResponse.response.email,
+    };
 }
+
 export const Login = () => {
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
     const { mutate: signInMutation } = useMutation<
         User,
         unknown,
@@ -52,6 +61,7 @@ export const Login = () => {
             Cookies.set("RefreshToken", data.RefreshToken, {
                 expires: data.ExpiresIn,
             });
+            setUser?.({ email: data.email });
             navigate("/");
         },
         onError: (error: unknown) => {
@@ -64,7 +74,6 @@ export const Login = () => {
 
     return (
         <div className="login">
-            <h4>Login</h4>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -72,24 +81,30 @@ export const Login = () => {
                 }}
             >
                 <div>
-                    <input
+                    <TextInput
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e)}
                         name="email"
-                        type="text"
+                        type="email"
                         placeholder="Email"
                     />
                 </div>
                 <div>
-                    <input
+                    <TextInput
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e)}
                         name="password"
                         type="password"
                         placeholder="Password"
                     />
                 </div>
-                <button>Login</button>
+                <Button
+                    type="submit"
+                    style={{ width: "100%" }}
+                    className="button-solid"
+                >
+                    Sign in
+                </Button>
             </form>
         </div>
     );

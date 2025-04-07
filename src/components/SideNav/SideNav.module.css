@@ -1,4 +1,21 @@
 .sidenav {
     width: 300px;
-    background: var(--background-primary);
+    background: #EDF4F5;
+    border-right: 1px solid #DFE9EB;
+    flex-shrink: 0;
+}
+.sidenav__menu {
+    border-bottom: 1px solid #DFE9EB;
+
+}
+.sidenav__menu ul {
+    margin: 0;
+    padding: 12px 24px;
+}
+.sidenav__menu li {
+    list-style: none;
+    margin: 12px 0;
+    font-size: 1em;
+    line-height: 1.5;
+
 }

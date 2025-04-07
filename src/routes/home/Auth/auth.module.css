@@ -1,0 +1,23 @@
+.auth {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.auth__intro {
+    background-color:  var(--background-primary);
+}
+
+.auth__column {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth__block {
+    max-width: 520px;
+    width: 100%;
+}

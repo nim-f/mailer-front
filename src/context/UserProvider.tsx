@@ -2,8 +2,15 @@ import { User } from "../types/User";
 import { useQuery } from "@tanstack/react-query";
 import { UserContext } from "./UserContext";
 import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
-async function getUser(): Promise<User> {
+async function getUser(): Promise<{
+    authorizer: {
+        claims: {
+            email: string;
+        };
+    };
+}> {
     const response = await fetch(
         "https://2x4g1ehzrc.execute-api.us-east-1.amazonaws.com/Prod/getuser/",
         {
@@ -27,23 +34,33 @@ type UserProviderProps = {
 
 export const UserProvider = ({ children }: UserProviderProps) => {
     // fetch user with tanstack react-query
-    const {
-        data: user,
-        isFetching,
-        error,
-    } = useQuery({
+    const { data, isFetching, error } = useQuery({
         queryKey: ["user", 1],
         queryFn: getUser,
         retry: 0,
     });
 
+    const [user, setUser] = useState<User | undefined>(
+        data
+            ? {
+                  email: data.authorizer.claims.email,
+              }
+            : undefined
+    );
+
+    useEffect(() => {
+        if (data) {
+            setUser({ email: data.authorizer.claims.email });
+        }
+    }, [data]);
+
     console.log({ user });
-    if (isFetching) {
-        return <div>Loading...</div>;
-    }
+    // if (isFetching) {
+    //     return <div>Loading...</div>;
+    // }
 
     return (
-        <UserContext.Provider value={{ user, error }}>
+        <UserContext.Provider value={{ user, error, setUser }}>
             {children}
         </UserContext.Provider>
     );

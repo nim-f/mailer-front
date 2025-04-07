@@ -13,6 +13,36 @@
   -moz-osx-font-smoothing: grayscale;
   --background-primary: #DFE9EB;
   --background-secondary: #edf4f5;
+  --text-primary: #000000;
+  --font-size-default: 16px;
+  --light-border-colour: #C0CFD14D;
+  --dark-blue-text-colour: #243142;
+  --button-blue-colour: #2579FF;
+  --blocks-border-colour: #DFE9EB;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  vertical-align: top;
+}
+
+body {
+  font-size: var(--font-size-default);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
 
 
@@ -34,7 +64,7 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.25em;
   line-height: 1.1;
 }
 

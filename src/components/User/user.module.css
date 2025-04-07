@@ -1,0 +1,26 @@
+.user {
+    display: flex;
+    padding: 16px 24px;
+    border-bottom: 1px solid #DFE9EB;
+    align-items: flex-start;
+}
+
+.user__avatar{
+    margin-right: 16px;
+}
+
+.user__info {
+    margin: 0;
+    max-width: 140px;
+    overflow-wrap: break-word;
+}    
+
+.user__info h4 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.user__role {
+    font-size: 10px;
+}
