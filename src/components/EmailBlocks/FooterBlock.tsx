@@ -9,6 +9,7 @@ interface FooterBlockProps {
   onDelete?: (id: string) => void;
   onMove?: (id: string, direction: 'up' | 'down') => void;
   isSelected?: boolean;
+  onUpdateContent?: (id: string, content: string) => void;
 }
 
 export const FooterBlock: React.FC<FooterBlockProps> = ({

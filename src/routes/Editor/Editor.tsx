@@ -53,7 +53,7 @@ export const Editor = () => {
         if (selectedLayout && !template && !templateId) {
             // Create a new template
             const newTemplate: EmailTemplate = {
-                templateId: uuidv4(),
+                // templateId: uuidv4(),
                 name: 'New Email Template',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),

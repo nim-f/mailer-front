@@ -19,8 +19,8 @@ const getIdTokenFromCookie = (): string | undefined => {
 export const saveTemplate = async (template: EmailTemplate): Promise<EmailTemplate> => {
   console.log({template})
   try {
-    const response = await fetch(`${API_URL}/templates`, {
-      method: template.templateId ? 'POST' : 'PUT', // POST for new templates, PUT for updates
+    const response = await fetch(`${API_URL}/templates${template.templateId ? `/${template.templateId}` : ''}`, {
+      method: template.templateId ? 'PUT' : 'POST', // POST for new templates, PUT for updates
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getIdTokenFromCookie()}` // Using ID token from cookies for authentication

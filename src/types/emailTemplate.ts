@@ -2,7 +2,7 @@
 
 // Main template structure
 export interface EmailTemplate {
-  templateId: string;
+  templateId?: string;
   name: string;
   createdAt: string;
   updatedAt: string;
