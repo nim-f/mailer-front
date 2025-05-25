@@ -15,7 +15,7 @@ export const Home = () => {
             <div className={classes.home_intro__button}>
                 <Button
                     className="button-solid"
-                    onClick={() => navigate("/emails/new")}
+                    onClick={() => navigate("/editor")}
                 >
                     Start new email
                 </Button>

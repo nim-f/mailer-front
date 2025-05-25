@@ -91,6 +91,92 @@
   font-weight: bold;
 }
 
+/* Content layout styles */
+.contentContainer {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  border: 1px solid #E2EAF0;
+  border-radius: 8px;
+  /* overflow: hidden; */
+  position: relative;
+}
+
+.editorTools {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #E2EAF0;
+  background-color: #f9f9f9;
+}
+
+.toolsLeft, .toolsRight {
+  display: flex;
+  gap: 8px;
+}
+
+.toolButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid #E2EAF0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6B7A86;
+  transition: all 0.2s;
+}
+
+.toolButton:hover {
+  background-color: #f0f7ff;
+  border-color: #2579FF;
+  color: #2579FF;
+}
+
+.singleColumnLayout, .doubleColumnLayout {
+  display: flex;
+  min-height: 300px;
+  padding: 20px;
+}
+
+.singleColumnLayout {
+  flex-direction: column;
+}
+
+.doubleColumnLayout {
+  flex-direction: row;
+  gap: 20px;
+}
+
+.contentColumn {
+  flex: 1;
+  border: 1px dashed #E2EAF0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  min-height: 200px;
+}
+
+.addContentButton {
+  background-color: white;
+  border: 1px solid #E2EAF0;
+  color: #6B7A86;
+  font-size: 14px;
+  padding: 8px 16px;
+  transition: all 0.2s;
+}
+
+.addContentButton:hover {
+  background-color: #f0f7ff;
+  border-color: #2579FF;
+  color: #2579FF;
+}
+
 /* Dropdown container */
 .dropdownContainer {
   position: relative;
