@@ -4,11 +4,13 @@ import ContentDropdown from '../ContentDropdown';
 
 interface AddContentButtonProps {
   columnIndex: number;
-  onSelectContent: (contentType: string, columnIndex: number) => void;
+  rowId?: string;
+  onSelectContent: (contentType: string, columnIndex: number, rowId?: string) => void;
 }
 
 export const AddContentButton: React.FC<AddContentButtonProps> = ({
   columnIndex,
+  rowId,
   onSelectContent
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -22,7 +24,7 @@ export const AddContentButton: React.FC<AddContentButtonProps> = ({
   };
   
   const handleContentSelect = (contentType: string) => {
-    onSelectContent(contentType, columnIndex);
+    onSelectContent(contentType, columnIndex, rowId);
     handleCloseDropdown();
   };
   

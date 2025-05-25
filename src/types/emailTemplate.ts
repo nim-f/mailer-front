@@ -7,6 +7,7 @@ export interface EmailTemplate {
   createdAt: string;
   updatedAt: string;
   layout: LayoutType;
+  rows: Row[];
   blocks: Block[];
   metadata: TemplateMetadata;
 }
@@ -27,6 +28,7 @@ export interface TemplateMetadata {
 export interface BaseBlock {
   id: string;
   type: BlockType;
+  rowId: string; // ID of the row this block belongs to
   column: number; // 0 for single column or left column, 1 for right column
   order: number; // Position in the column
   settings?: Record<string, any>; // Block-specific settings
@@ -34,6 +36,13 @@ export interface BaseBlock {
 
 // Block types
 export type BlockType = 'pre-header' | 'title' | 'image-video' | 'body-text' | 'table' | 'footer';
+
+// Row interface
+export interface Row {
+  id: string;
+  layout: LayoutType;
+  order: number;
+}
 
 // Specific block types
 export interface PreHeaderBlock extends BaseBlock {
@@ -106,10 +115,18 @@ export const sampleTemplate: EmailTemplate = {
   createdAt: '2025-05-25T10:30:00Z',
   updatedAt: '2025-05-25T10:35:00Z',
   layout: 'double',
+  rows: [
+    {
+      id: 'row-1',
+      layout: 'double',
+      order: 0
+    }
+  ],
   blocks: [
     {
       id: 'block-1',
       type: 'pre-header',
+      rowId: 'row-1',
       column: 0,
       order: 0,
       content: 'Special offers inside - Open now!'
@@ -117,6 +134,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-2',
       type: 'title',
+      rowId: 'row-1',
       column: 0,
       order: 1,
       content: 'May Newsletter',
@@ -126,6 +144,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-3',
       type: 'image-video',
+      rowId: 'row-1',
       column: 0,
       order: 2,
       mediaType: 'image',
@@ -137,6 +156,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-4',
       type: 'body-text',
+      rowId: 'row-1',
       column: 0,
       order: 3,
       content: 'Welcome to our May newsletter! We have some exciting updates to share with you.',
@@ -148,6 +168,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-5',
       type: 'title',
+      rowId: 'row-1',
       column: 1,
       order: 0,
       content: 'Featured Products',
@@ -157,6 +178,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-6',
       type: 'body-text',
+      rowId: 'row-1',
       column: 1,
       order: 1,
       content: 'Check out our latest products that are trending this month.',
@@ -168,6 +190,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-7',
       type: 'table',
+      rowId: 'row-1',
       column: 1,
       order: 2,
       headers: ['Product', 'Price', 'Availability'],
@@ -186,6 +209,7 @@ export const sampleTemplate: EmailTemplate = {
     {
       id: 'block-8',
       type: 'footer',
+      rowId: 'row-1',
       column: 0,
       order: 4,
       content: '© 2025 Your Company. All rights reserved.',

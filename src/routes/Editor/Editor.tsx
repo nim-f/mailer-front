@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const Editor = () => {
     const [showLayoutDropdown, setShowLayoutDropdown] = useState(false);
+    const [showAddBlockDropdown, setShowAddBlockDropdown] = useState(false);
     const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
     const [template, setTemplate] = useState<EmailTemplate | null>(null);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -24,6 +25,11 @@ export const Editor = () => {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 layout: selectedLayout as 'single' | 'double',
+                rows: [{
+                    id: uuidv4(),
+                    layout: selectedLayout as 'single' | 'double',
+                    order: 0
+                }],
                 blocks: [],
                 metadata: {
                     author: 'Current User',
@@ -38,23 +44,51 @@ export const Editor = () => {
         setShowLayoutDropdown(prev => !prev);
     };
     
+    const toggleAddBlockDropdown = () => {
+        setShowAddBlockDropdown(prev => !prev);
+    };
+    
     const handleSelectLayout = (layout: string) => {
         setSelectedLayout(layout);
         setShowLayoutDropdown(false);
         console.log(`Selected layout: ${layout}`);
     };
     
-    const handleSelectContent = (contentType: string, columnIndex: number) => {
-        console.log(`Selected content type: ${contentType} for column: ${columnIndex}`);
+    const handleSelectBlockLayout = (layout: string) => {
         if (!template) return;
         
-        // Find the highest order in this column
+        // Create a new row with the selected layout
+        const newRow = {
+            id: uuidv4(),
+            layout: layout as 'single' | 'double',
+            order: template.rows.length
+        };
+        
+        // Add the new row to the template
+        setTemplate({
+            ...template,
+            rows: [...template.rows, newRow],
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Added new row with layout: ${layout}`);
+        setShowAddBlockDropdown(false);
+    };
+    
+    const handleSelectContent = (contentType: string, columnIndex: number, rowId?: string) => {
+        console.log(`Selected content type: ${contentType} for column: ${columnIndex}${rowId ? ` in row: ${rowId}` : ''}`);
+        if (!template) return;
+        
+        // If no rowId is provided, use the first row
+        const targetRowId = rowId || template.rows[0].id;
+        
+        // Find the highest order in this column for this row
         const highestOrder = template.blocks
-            .filter(block => block.column === columnIndex)
+            .filter(block => block.column === columnIndex && block.rowId === targetRowId)
             .reduce((max, block) => Math.max(max, block.order), -1);
         
         // Create a new block based on the content type
-        const newBlock = createBlock(contentType as BlockType, columnIndex, highestOrder + 1);
+        const newBlock = createBlock(contentType as BlockType, columnIndex, highestOrder + 1, targetRowId);
         
         // Add the new block to the template
         setTemplate({
@@ -64,12 +98,13 @@ export const Editor = () => {
         });
     };
     
-    const createBlock = (type: BlockType, column: number, order: number): Block => {
+    const createBlock = (type: BlockType, column: number, order: number, rowId: string): Block => {
         const baseBlock = {
             id: uuidv4(),
             type,
             column,
-            order
+            order,
+            rowId
         };
         
         switch (type) {
@@ -271,59 +306,77 @@ export const Editor = () => {
                                     </button>
                                 </div>
                             </div>
-                            <div className={selectedLayout === 'single' ? classes.singleColumnLayout : classes.doubleColumnLayout}>
-                                <div className={classes.contentColumn}>
-                                    {/* Render blocks for column 0 */}
-                                    {template && template.blocks
-                                        .filter(block => block.column === 0)
-                                        .sort((a, b) => a.order - b.order)
-                                        .map(block => (
-                                            <BlockRenderer
-                                                key={block.id}
-                                                block={block}
-                                                onEdit={handleEditBlock}
-                                                onDelete={handleDeleteBlock}
-                                                onMove={handleMoveBlock}
-                                                isSelected={selectedBlockId === block.id}
-                                            />
-                                        ))
-                                    }
-                                    <AddContentButton 
-                                        columnIndex={0}
-                                        onSelectContent={handleSelectContent}
-                                    />
-                                </div>
-                                {selectedLayout === 'double' && (
-                                    <div className={classes.contentColumn}>
-                                        {/* Render blocks for column 1 */}
-                                        {template && template.blocks
-                                            .filter(block => block.column === 1)
-                                            .sort((a, b) => a.order - b.order)
-                                            .map(block => (
-                                                <BlockRenderer
-                                                    key={block.id}
-                                                    block={block}
-                                                    onEdit={handleEditBlock}
-                                                    onDelete={handleDeleteBlock}
-                                                    onMove={handleMoveBlock}
-                                                    isSelected={selectedBlockId === block.id}
+                            
+                            {/* Render rows */}
+                            {template && template.rows
+                                .sort((a, b) => a.order - b.order)
+                                .map(row => (
+                                    <div key={row.id} className={classes.rowContainer}>
+                                        <div className={row.layout === 'single' ? classes.singleColumnLayout : classes.doubleColumnLayout}>
+                                            <div className={classes.contentColumn}>
+                                                {/* Render blocks for column 0 in this row */}
+                                                {template.blocks
+                                                    .filter(block => block.column === 0 && block.rowId === row.id)
+                                                    .sort((a, b) => a.order - b.order)
+                                                    .map(block => (
+                                                        <BlockRenderer
+                                                            key={block.id}
+                                                            block={block}
+                                                            onEdit={handleEditBlock}
+                                                            onDelete={handleDeleteBlock}
+                                                            onMove={handleMoveBlock}
+                                                            isSelected={selectedBlockId === block.id}
+                                                        />
+                                                    ))
+                                                }
+                                                <AddContentButton 
+                                                    columnIndex={0}
+                                                    rowId={row.id}
+                                                    onSelectContent={handleSelectContent}
                                                 />
-                                            ))
-                                        }
-                                        <AddContentButton 
-                                            columnIndex={1}
-                                            onSelectContent={handleSelectContent}
-                                        />
+                                            </div>
+                                            {row.layout === 'double' && (
+                                                <div className={classes.contentColumn}>
+                                                    {/* Render blocks for column 1 in this row */}
+                                                    {template.blocks
+                                                        .filter(block => block.column === 1 && block.rowId === row.id)
+                                                        .sort((a, b) => a.order - b.order)
+                                                        .map(block => (
+                                                            <BlockRenderer
+                                                                key={block.id}
+                                                                block={block}
+                                                                onEdit={handleEditBlock}
+                                                                onDelete={handleDeleteBlock}
+                                                                onMove={handleMoveBlock}
+                                                                isSelected={selectedBlockId === block.id}
+                                                            />
+                                                        ))
+                                                    }
+                                                    <AddContentButton 
+                                                        columnIndex={1}
+                                                        rowId={row.id}
+                                                        onSelectContent={handleSelectContent}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                )}
-                            </div>
+                                ))
+                            }
                         </div>
                     )}
                     <div className={classes.addBlockWrapper}>
-                        <Button>
-                            <span className={classes.buttonIcon}>+</span>
-                            Add block
-                        </Button>
+                        <div className={classes.dropdownContainer}>
+                            <Button onClick={toggleAddBlockDropdown}>
+                                <span className={classes.buttonIcon}>+</span>
+                                Add block
+                            </Button>
+                            <LayoutDropdown 
+                                isOpen={showAddBlockDropdown} 
+                                onClose={toggleAddBlockDropdown} 
+                                onSelectLayout={handleSelectBlockLayout} 
+                            />
+                        </div>
                     </div>
                 </div>
             </main>
