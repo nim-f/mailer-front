@@ -140,6 +140,7 @@
   display: flex;
   min-height: 300px;
   padding: 20px;
+  width: 100%;
 }
 
 .singleColumnLayout {
@@ -155,11 +156,12 @@
   flex: 1;
   border: 1px dashed #E2EAF0;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 20px;
   min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
 }
 
 .addContentButton {

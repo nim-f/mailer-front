@@ -1,0 +1,168 @@
+.blockWrapper {
+  position: relative;
+  margin: 8px 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.blockWrapper:hover {
+  border-color: #E2EAF0;
+}
+
+.selectedBlock {
+  border-color: #2579FF;
+  box-shadow: 0 0 0 1px #2579FF;
+}
+
+.blockControls {
+  position: absolute;
+  top: -32px;
+  right: 0;
+  display: flex;
+  gap: 4px;
+  background-color: white;
+  padding: 4px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.blockControlButton {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blockControlButton:hover {
+  background-color: #f0f7ff;
+  border-color: #2579FF;
+}
+
+.blockContent {
+  padding: 8px;
+}
+
+/* Specific block styles */
+.preHeaderBlock {
+  font-size: 12px;
+  color: #6B7A86;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.titleBlock {
+  margin: 16px 0;
+}
+
+.titleBlock h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.titleBlock h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.titleBlock h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.alignLeft {
+  text-align: left;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.imageBlock {
+  margin: 16px 0;
+}
+
+.imageBlock img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.imageCaption {
+  font-size: 12px;
+  color: #6B7A86;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.bodyTextBlock {
+  margin: 16px 0;
+  line-height: 1.5;
+}
+
+.tableBlock {
+  margin: 16px 0;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableBlock th {
+  padding: 8px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.tableBlock td {
+  padding: 8px;
+  border: 1px solid #E2EAF0;
+}
+
+.tableBlock tr:nth-child(even).alternateRow {
+  background-color: #f9f9f9;
+}
+
+.footerBlock {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid #E2EAF0;
+  font-size: 12px;
+  color: #6B7A86;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.socialIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2579FF;
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.unsubscribeLink {
+  margin-top: 8px;
+  color: #6B7A86;
+  text-decoration: underline;
+}
