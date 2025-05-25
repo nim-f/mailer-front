@@ -2,7 +2,7 @@
 
 // Main template structure
 export interface EmailTemplate {
-  id: string;
+  templateId: string;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -110,7 +110,7 @@ export type Block = PreHeaderBlock | TitleBlock | ImageVideoBlock | BodyTextBloc
 
 // Sample template for testing
 export const sampleTemplate: EmailTemplate = {
-  id: 'template-1',
+  templateId: 'template-1',
   name: 'Marketing Newsletter',
   createdAt: '2025-05-25T10:30:00Z',
   updatedAt: '2025-05-25T10:35:00Z',

@@ -15,5 +15,61 @@
 .editor_header__title {
     display: flex;
     align-items: center;
+    gap: 10px;
+}
 
+.titleWrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.editableTitle {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-right: 8px;
+}
+
+.editableTitle:hover {
+    background-color: rgba(37, 121, 255, 0.1);
+    border-radius: 4px;
+    padding: 4px;
+    margin: -4px 4px -4px -4px;
+}
+
+.editButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+
+.editButton:hover {
+    background-color: rgba(37, 121, 255, 0.1);
+}
+
+.editIcon {
+    font-size: 14px;
+    color: #2579FF;
+    opacity: 0.7;
+}
+
+.editButton:hover .editIcon {
+    opacity: 1;
+}
+
+.titleInput {
+    font-size: 1.25em;
+    font-weight: bold;
+    padding: 4px 8px;
+    border: 1px solid #2579FF;
+    border-radius: 4px;
+    background-color: white;
+    width: 300px;
+    outline: none;
 }

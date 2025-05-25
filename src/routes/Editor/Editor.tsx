@@ -7,6 +7,7 @@ import AddContentButton from "../../components/AddContentButton";
 import { EmailTemplate, Block, BlockType, sampleTemplate } from "../../types/emailTemplate";
 import { BlockRenderer } from "../../components/EmailBlocks";
 import { v4 as uuidv4 } from 'uuid';
+import { saveTemplate } from "../../services/templateService";
 
 export const Editor = () => {
     const [showLayoutDropdown, setShowLayoutDropdown] = useState(false);
@@ -14,13 +15,16 @@ export const Editor = () => {
     const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
     const [template, setTemplate] = useState<EmailTemplate | null>(null);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveSuccess, setSaveSuccess] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
     
     // Initialize template when layout is selected
     useEffect(() => {
         if (selectedLayout && !template) {
             // Create a new template or use sample template
             const newTemplate: EmailTemplate = {
-                id: uuidv4(),
+                templateId: uuidv4(),
                 name: 'New Email Template',
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
@@ -179,7 +183,151 @@ export const Editor = () => {
     const handleEditBlock = (id: string) => {
         setSelectedBlockId(id);
         console.log(`Editing block: ${id}`);
-        // Here you would open a modal or sidebar to edit the block
+        // For non-title blocks, you would open a modal or sidebar to edit the block
+    };
+    
+    const handleUpdateTitleContent = (id: string, content: string) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'title') {
+                return {
+                    ...block,
+                    content
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated title content for block: ${id}`);
+    };
+    
+    const handleUpdateTitleAlignment = (id: string, alignment: 'left' | 'center' | 'right') => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'title') {
+                return {
+                    ...block,
+                    alignment
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated title alignment for block: ${id} to ${alignment}`);
+    };
+    
+    const handleUpdateTitleLevel = (id: string, level: 1 | 2 | 3) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'title') {
+                return {
+                    ...block,
+                    level
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated title level for block: ${id} to ${level}`);
+    };
+    
+    const handleUpdatePreHeaderContent = (id: string, content: string) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'pre-header') {
+                return {
+                    ...block,
+                    content
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated pre-header content for block: ${id}`);
+    };
+    
+    const handleUpdateBodyTextContent = (id: string, content: string) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'body-text') {
+                return {
+                    ...block,
+                    content
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated body text content for block: ${id}`);
+    };
+    
+    const handleUpdateBodyTextFormatting = (id: string, formatting: any) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'body-text') {
+                return {
+                    ...block,
+                    formatting
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated body text formatting for block: ${id}`);
     };
     
     const handleDeleteBlock = (id: string) => {
@@ -251,20 +399,67 @@ export const Editor = () => {
         setSelectedLayout(sampleTemplate.layout);
     };
     
+    // Save template to database
+    const handleTemplateNameChange = (newName: string) => {
+        if (template) {
+            setTemplate({
+                ...template,
+                name: newName,
+                updatedAt: new Date().toISOString()
+            });
+        }
+    };
+
+    const handleSaveTemplate = async () => {
+        if (!template) return;
+        
+        try {
+            setIsSaving(true);
+            setSaveError(null);
+            
+            // Update the template's timestamp
+            const updatedTemplate = {
+                ...template,
+                updatedAt: new Date().toISOString()
+            };
+            
+            // Save to database
+            const savedTemplate = await saveTemplate(updatedTemplate);
+            
+            // Update local state with the saved template
+            setTemplate(savedTemplate);
+            
+            // Show success message
+            setSaveSuccess(true);
+            setTimeout(() => setSaveSuccess(false), 3000);
+        } catch (error) {
+            // Show error message
+            setSaveError(error instanceof Error ? error.message : 'Failed to save template');
+            setTimeout(() => setSaveError(null), 5000);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+    
     return (
         <div className={classes.container}>
             <main className={classes.mainContent}>
-                <EditorHeader title="New letter" />
+                <EditorHeader 
+                    title={template ? template.name : "Email Template Editor"} 
+                    onSave={handleSaveTemplate}
+                    isSaving={isSaving}
+                    onTitleChange={template ? handleTemplateNameChange : undefined}
+                />
                 <div className={classes.editorContent}>
                     {!selectedLayout ? (
-                        <div className={classes.layoutBox}>
-                            <div className={classes.dropdownContainer}>
-                                <Button 
-                                    onClick={toggleLayoutDropdown}
-                                    className={classes.defineLayoutButton}
-                                >
-                                    <span className={classes.buttonIcon}>+</span>
-                                    Define layout
+                    <div className={classes.layoutBox}>
+                        <div className={classes.dropdownContainer}>
+                            <Button 
+                                onClick={toggleLayoutDropdown}
+                                className={classes.defineLayoutButton}
+                            >
+                                <span className={classes.buttonIcon}>+</span>
+                                Define layout
                                 </Button>
                                 <LayoutDropdown 
                                     isOpen={showLayoutDropdown} 
@@ -307,6 +502,18 @@ export const Editor = () => {
                                 </div>
                             </div>
                             
+                    {saveSuccess && (
+                        <div className={classes.saveSuccessMessage}>
+                            Template saved successfully!
+                        </div>
+                    )}
+                    
+                    {saveError && (
+                        <div className={classes.saveErrorMessage}>
+                            Error: {saveError}
+                        </div>
+                    )}
+                            
                             {/* Render rows */}
                             {template && template.rows
                                 .sort((a, b) => a.order - b.order)
@@ -320,13 +527,19 @@ export const Editor = () => {
                                                     .sort((a, b) => a.order - b.order)
                                                     .map(block => (
                                                         <BlockRenderer
-                                                            key={block.id}
-                                                            block={block}
-                                                            onEdit={handleEditBlock}
-                                                            onDelete={handleDeleteBlock}
-                                                            onMove={handleMoveBlock}
-                                                            isSelected={selectedBlockId === block.id}
-                                                        />
+                                                        key={block.id}
+                                                        block={block}
+                                                        onEdit={handleEditBlock}
+                                                        onDelete={handleDeleteBlock}
+                                                        onMove={handleMoveBlock}
+                                                        isSelected={selectedBlockId === block.id}
+                                                        onUpdateTitleContent={handleUpdateTitleContent}
+                                                        onUpdateTitleAlignment={handleUpdateTitleAlignment}
+                                                        onUpdateTitleLevel={handleUpdateTitleLevel}
+                                                        onUpdatePreHeaderContent={handleUpdatePreHeaderContent}
+                                                        onUpdateBodyTextContent={handleUpdateBodyTextContent}
+                                                        onUpdateBodyTextFormatting={handleUpdateBodyTextFormatting}
+                                                    />
                                                     ))
                                                 }
                                                 <AddContentButton 
