@@ -1,8 +1,8 @@
-import { Login } from "../../../components/Login";
-import mailImg from "../../../assets/mail_pic.png";
+import { Login } from "../../components/Login";
+import mailImg from "../../assets/mail_pic.png";
 
 import classes from "./auth.module.css";
-import Button from "../../../components/Button/Button";
+import Button from "../../components/Button/Button";
 
 export const Auth = () => {
     return (

@@ -1,16 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
 import Button from "../Button/Button";
 import TextInput from "../TextInput/TextInput";
-import { UserContext } from "../../context/UserContext";
+
+// TODO: Move this to environment variable (REACT_APP_API_URL)
+const API_URL = "https://o1muw8cjaa.execute-api.us-east-1.amazonaws.com/dev";
 
 type User = {
-    AccessToken: string;
-    ExpiresIn: number;
-    IdToken: string;
-    RefreshToken: string;
+    accessToken: string;
+    idToken: string;
+    refreshToken: string;
     TokenType: string;
     email: string;
 };
@@ -24,7 +25,7 @@ async function signIn({
 }): Promise<User> {
     console.log({ email, password });
     const response = await fetch(
-        "https://2x4g1ehzrc.execute-api.us-east-1.amazonaws.com/Prod/auth/",
+        `${API_URL}/login`,
         {
             method: "POST",
             headers: {
@@ -38,30 +39,23 @@ async function signIn({
 
     const jsonResponse = await response.json();
     return {
-        ...jsonResponse.response.AuthenticationResult,
-        email: jsonResponse.response.email,
+        ...jsonResponse.tokens
     };
 }
 
 export const Login = () => {
     const navigate = useNavigate();
-    const { setUser } = useContext(UserContext);
     const { mutate: signInMutation } = useMutation<
         User,
         unknown,
         { email: string; password: string },
         unknown
     >({
-        mutationFn: signIn,
+        mutationFn: signIn, 
         onSuccess: (data: User) => {
             console.log("User signed in", data);
-            Cookies.set("IdToken", data.IdToken, {
-                expires: data.ExpiresIn,
-            });
-            Cookies.set("RefreshToken", data.RefreshToken, {
-                expires: data.ExpiresIn,
-            });
-            setUser?.({ email: data.email });
+            Cookies.set("idToken", data.idToken);
+            Cookies.set("refreshToken", data.refreshToken);
             navigate("/");
         },
         onError: (error: unknown) => {

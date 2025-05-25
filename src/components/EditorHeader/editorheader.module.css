@@ -1,0 +1,19 @@
+.editor_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--navbar-background-colour);
+    width: 100%;
+    padding: 18px 24px;
+}
+
+.editor_header h1 {
+    font-size: 1.25em;
+    margin: 0;
+}
+
+.editor_header__title {
+    display: flex;
+    align-items: center;
+
+}

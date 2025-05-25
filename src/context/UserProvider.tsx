@@ -4,20 +4,21 @@ import { UserContext } from "./UserContext";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
+// TODO: Move this to environment variable (REACT_APP_API_URL)
+const API_URL = "https://o1muw8cjaa.execute-api.us-east-1.amazonaws.com/dev";
+
 async function getUser(): Promise<{
-    authorizer: {
-        claims: {
-            email: string;
-        };
-    };
+    userId: string;
+    email: string;
+    name: string;
 }> {
     const response = await fetch(
-        "https://2x4g1ehzrc.execute-api.us-east-1.amazonaws.com/Prod/getuser/",
+        `${API_URL}/profile`,
         {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${Cookies.get("IdToken")}`,
+                Authorization: `Bearer ${Cookies.get("idToken")}`,
             },
         }
     );
@@ -34,7 +35,7 @@ type UserProviderProps = {
 
 export const UserProvider = ({ children }: UserProviderProps) => {
     // fetch user with tanstack react-query
-    const { data, isFetching, error } = useQuery({
+    const { data, error } = useQuery({
         queryKey: ["user", 1],
         queryFn: getUser,
         retry: 0,
@@ -43,14 +44,15 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     const [user, setUser] = useState<User | undefined>(
         data
             ? {
-                  email: data.authorizer.claims.email,
+                  email: data.email,
+                  name: data.name,
               }
             : undefined
     );
 
     useEffect(() => {
         if (data) {
-            setUser({ email: data.authorizer.claims.email });
+            setUser({ email: data.email, name: data.name });
         }
     }, [data]);
 
