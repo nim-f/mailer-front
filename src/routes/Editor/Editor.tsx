@@ -2,27 +2,56 @@ import { EditorHeader } from "../../components/EditorHeader/EditorHeader";
 import Button from "../../components/Button/Button";
 import classes from "./Editor.module.css";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 import LayoutDropdown from "../../components/LayoutDropdown";
 import AddContentButton from "../../components/AddContentButton";
 import { EmailTemplate, Block, BlockType, sampleTemplate } from "../../types/emailTemplate";
 import { BlockRenderer } from "../../components/EmailBlocks";
 import { v4 as uuidv4 } from 'uuid';
-import { saveTemplate } from "../../services/templateService";
+import { saveTemplate, getTemplateById } from "../../services/templateService";
 
 export const Editor = () => {
+    const { templateId } = useParams<{ templateId: string }>();
     const [showLayoutDropdown, setShowLayoutDropdown] = useState(false);
     const [showAddBlockDropdown, setShowAddBlockDropdown] = useState(false);
     const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
     const [template, setTemplate] = useState<EmailTemplate | null>(null);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
+    const [loadError, setLoadError] = useState<string | null>(null);
     
-    // Initialize template when layout is selected
+    // Load existing template if templateId is provided
     useEffect(() => {
-        if (selectedLayout && !template) {
-            // Create a new template or use sample template
+        const loadExistingTemplate = async () => {
+            if (templateId) {
+                try {
+                    setIsLoading(true);
+                    setLoadError(null);
+                    const existingTemplate = await getTemplateById(templateId);
+                    setTemplate(existingTemplate);
+                    // Set the layout based on the loaded template
+                    setSelectedLayout(existingTemplate.layout);
+                } catch (error) {
+                    console.error('Failed to load template:', error);
+                    setLoadError('Failed to load the template. Please try again.');
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+        
+        if (templateId && !template) {
+            loadExistingTemplate();
+        }
+    }, [templateId]);
+    
+    // Initialize template when layout is selected (for new templates)
+    useEffect(() => {
+        if (selectedLayout && !template && !templateId) {
+            // Create a new template
             const newTemplate: EmailTemplate = {
                 templateId: uuidv4(),
                 name: 'New Email Template',
@@ -42,7 +71,7 @@ export const Editor = () => {
             };
             setTemplate(newTemplate);
         }
-    }, [selectedLayout, template]);
+    }, [selectedLayout, template, templateId]);
     
     const toggleLayoutDropdown = () => {
         setShowLayoutDropdown(prev => !prev);
@@ -451,7 +480,16 @@ export const Editor = () => {
                     onTitleChange={template ? handleTemplateNameChange : undefined}
                 />
                 <div className={classes.editorContent}>
-                    {!selectedLayout ? (
+                    {isLoading ? (
+                        <div className={classes.loadingState}>
+                            <p>Loading template...</p>
+                        </div>
+                    ) : loadError ? (
+                        <div className={classes.errorState}>
+                            <p>{loadError}</p>
+                            <Button onClick={() => window.location.href = '/editor'}>Create New Template</Button>
+                        </div>
+                    ) : !selectedLayout ? (
                     <div className={classes.layoutBox}>
                         <div className={classes.dropdownContainer}>
                             <Button 

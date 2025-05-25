@@ -12,6 +12,7 @@ export const AuthorisedRoutes = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="editor" element={<Editor />} />
+                    <Route path="editor/:templateId" element={<Editor />} />
                 </Routes>
             </div>
         </div>

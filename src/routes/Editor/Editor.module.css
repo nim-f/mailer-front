@@ -34,6 +34,34 @@
   gap: 8px;
 }
 
+.lettersList.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.loadingState,
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  min-height: 300px;
+}
+
+.loadingState p,
+.errorState p {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+.errorState p {
+  color: #e53935;
+}
+
 .letterItem {
   background: none;
   border-radius: 6px;

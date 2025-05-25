@@ -17,6 +17,7 @@ const getIdTokenFromCookie = (): string | undefined => {
  * @returns The saved template with updated fields from the server
  */
 export const saveTemplate = async (template: EmailTemplate): Promise<EmailTemplate> => {
+  console.log({template})
   try {
     const response = await fetch(`${API_URL}/templates`, {
       method: template.templateId ? 'POST' : 'PUT', // POST for new templates, PUT for updates
