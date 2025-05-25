@@ -72,4 +72,5 @@
     background-color: white;
     width: 300px;
     outline: none;
+    color: var(--text-colour);
 }

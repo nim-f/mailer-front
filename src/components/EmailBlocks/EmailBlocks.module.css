@@ -52,15 +52,167 @@
 
 /* Specific block styles */
 .preHeaderBlock {
-  font-size: 12px;
   color: #6B7A86;
-  padding: 8px;
-  background-color: #f9f9f9;
+  font-size: 12px;
+  margin: 8px 0;
   border-radius: 4px;
+  position: relative;
+}
+
+.preHeaderBlock.editing {
+  padding: 0;
+}
+
+.preHeaderBlock:hover .editHint {
+  opacity: 0.7;
+}
+
+.preHeaderEditContainer {
+  background-color: #f8f9fa;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.preHeaderEditContent {
+  min-height: 24px;
+  padding: 8px;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  background-color: white;
+  outline: none;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6B7A86;
 }
 
 .titleBlock {
   margin: 16px 0;
+  position: relative;
+}
+
+.titleBlock.editing {
+  padding: 0;
+}
+
+.titleBlock:hover .editHint {
+  opacity: 0.7;
+}
+
+.editHint {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  background-color: rgba(37, 121, 255, 0.1);
+  color: #2579FF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+  pointer-events: none; /* Ensures it doesn't interfere with clicks */
+}
+
+.titleEditContainer {
+  background-color: #f8f9fa;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.titleEditControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E2EAF0;
+}
+
+.titleLevelSelect {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #E2EAF0;
+  background-color: white;
+  font-size: 14px;
+}
+
+.alignmentControls {
+  display: flex;
+  gap: 5px;
+}
+
+.alignButton {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: 1px solid #E2EAF0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.alignButton:hover {
+  background-color: #f0f7ff;
+}
+
+.activeAlign {
+  background-color: #2579FF;
+  color: white;
+  border-color: #2579FF;
+}
+
+.editActionButtons {
+  display: flex;
+  gap: 5px;
+}
+
+.saveButton, .cancelButton {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: 1px solid #E2EAF0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.saveButton {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+
+.saveButton:hover {
+  background-color: #c8e6c9;
+}
+
+.cancelButton {
+  background-color: #ffebee;
+  color: #c62828;
+  border-color: #ffcdd2;
+}
+
+.cancelButton:hover {
+  background-color: #ffcdd2;
+}
+
+.titleEditContent {
+  min-height: 30px;
+  padding: 8px;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  background-color: white;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .titleBlock h1 {
@@ -110,6 +262,78 @@
 .bodyTextBlock {
   margin: 16px 0;
   line-height: 1.5;
+  position: relative;
+}
+
+.bodyTextBlock.editing {
+  padding: 0;
+}
+
+.bodyTextBlock:hover .editHint {
+  opacity: 0.7;
+}
+
+.bodyTextEditContainer {
+  background-color: #f8f9fa;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bodyTextEditControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E2EAF0;
+}
+
+.formattingControls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.fontSizeControl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.fontSizeControl label {
+  font-size: 14px;
+  color: #6B7A86;
+}
+
+.fontSizeSelect {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #E2EAF0;
+  background-color: white;
+  font-size: 14px;
+}
+
+.bodyTextEditContent {
+  min-height: 100px;
+  padding: 8px;
+  border: 1px solid #E2EAF0;
+  border-radius: 4px;
+  background-color: white;
+  outline: none;
+  font-size: 16px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.editTip {
+  font-size: 12px;
+  color: #6B7A86;
+  font-style: italic;
+  margin-top: 5px;
 }
 
 .tableBlock {

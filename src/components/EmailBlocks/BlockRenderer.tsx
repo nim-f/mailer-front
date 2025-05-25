@@ -13,6 +13,17 @@ interface BlockRendererProps {
   onDelete?: (id: string) => void;
   onMove?: (id: string, direction: 'up' | 'down') => void;
   isSelected?: boolean;
+  // Title block update props
+  onUpdateTitleContent?: (id: string, content: string) => void;
+  onUpdateTitleAlignment?: (id: string, alignment: 'left' | 'center' | 'right') => void;
+  onUpdateTitleLevel?: (id: string, level: 1 | 2 | 3) => void;
+  // PreHeader block update props
+  onUpdatePreHeaderContent?: (id: string, content: string) => void;
+  // BodyText block update props
+  onUpdateBodyTextContent?: (id: string, content: string) => void;
+  onUpdateBodyTextFormatting?: (id: string, formatting: any) => void;
+  // Footer block update props
+  onUpdateFooterContent?: (id: string, content: string) => void;
 }
 
 export const BlockRenderer: React.FC<BlockRendererProps> = ({
@@ -20,7 +31,14 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
   onEdit,
   onDelete,
   onMove,
-  isSelected
+  isSelected,
+  onUpdateTitleContent,
+  onUpdateTitleAlignment,
+  onUpdateTitleLevel,
+  onUpdatePreHeaderContent,
+  onUpdateBodyTextContent,
+  onUpdateBodyTextFormatting,
+  onUpdateFooterContent
 }) => {
   switch (block.type) {
     case 'pre-header':
@@ -31,6 +49,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
           onDelete={onDelete}
           onMove={onMove}
           isSelected={isSelected}
+          onUpdateContent={onUpdatePreHeaderContent}
         />
       );
     case 'title':
@@ -41,6 +60,9 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
           onDelete={onDelete}
           onMove={onMove}
           isSelected={isSelected}
+          onUpdateContent={onUpdateTitleContent}
+          onUpdateAlignment={onUpdateTitleAlignment}
+          onUpdateLevel={onUpdateTitleLevel}
         />
       );
     case 'image-video':
@@ -61,6 +83,8 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
           onDelete={onDelete}
           onMove={onMove}
           isSelected={isSelected}
+          onUpdateContent={onUpdateBodyTextContent}
+          onUpdateFormatting={onUpdateBodyTextFormatting}
         />
       );
     case 'table':
@@ -81,6 +105,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
           onDelete={onDelete}
           onMove={onMove}
           isSelected={isSelected}
+          onUpdateContent={onUpdateFooterContent}
         />
       );
     default:
