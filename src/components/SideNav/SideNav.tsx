@@ -26,17 +26,14 @@ const additionalStyles = `
 `;
 export const SideNav = () => {
     const location = useLocation();
-    const isEditorPage = location.pathname === "/editor";
     const [templates, setTemplates] = useState<EmailTemplate[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     
     useEffect(() => {
-        if (isEditorPage) {
-            fetchTemplates();
-        }
-    }, [isEditorPage]);
+        fetchTemplates();
+    }, []);
     
     const fetchTemplates = async () => {
         try {
@@ -83,7 +80,6 @@ export const SideNav = () => {
                 </ul>
             </div>
             
-            {isEditorPage && (
                 <div className={classes.lettersSection}>
                     <TextInput 
                         value={searchTerm} 
@@ -140,7 +136,6 @@ export const SideNav = () => {
                         )}
                     </div>
                 </div>
-            )}
         </div>
     );
 };
