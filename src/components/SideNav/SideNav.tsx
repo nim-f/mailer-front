@@ -79,63 +79,63 @@ export const SideNav = () => {
                     </li>
                 </ul>
             </div>
-            
-                <div className={classes.lettersSection}>
-                    <TextInput 
-                        value={searchTerm} 
-                        onChange={(value) => setSearchTerm(value)} 
-                        placeholder="Search templates..." 
-                    />
-                    <div className={classes.lettersList}>
-                        <div className={classes.lettersTitle}>YOUR TEMPLATES</div>
-                        {isLoading ? (
-                            <div className={classes.loadingState}>Loading templates...</div>
-                        ) : error ? (
-                            <div className={classes.errorState}>{error}</div>
-                        ) : filteredTemplates.length === 0 ? (
-                            <div className={classes.emptyState}>
-                                {searchTerm ? 'No templates match your search' : 'No templates found'}
+        
+            <div className={classes.lettersSection}>
+                <TextInput 
+                    value={searchTerm} 
+                    onChange={(value) => setSearchTerm(value)} 
+                    placeholder="Search templates..." 
+                />
+                <div className={classes.lettersList}>
+                    <div className={classes.lettersTitle}>YOUR TEMPLATES</div>
+                    {isLoading ? (
+                        <div className={classes.loadingState}>Loading templates...</div>
+                    ) : error ? (
+                        <div className={classes.errorState}>{error}</div>
+                    ) : filteredTemplates.length === 0 ? (
+                        <div className={classes.emptyState}>
+                            {searchTerm ? 'No templates match your search' : 'No templates found'}
+                        </div>
+                    ) : (
+                        filteredTemplates.map((template) => (
+                            <div 
+                                key={template.templateId} 
+                                className={`${classes.letterItem} ${location.pathname === `/editor/${template.templateId}` ? classes.letterActive : ''}`}
+                                onClick={() => {
+                                    // Navigate to the template editor
+                                    window.location.href = `/editor/${template.templateId}`;
+                                }}
+                            >
+                                <div>{formatDate(template.updatedAt)}</div>
+                                <div>{template.name.length > 30 ? `${template.name.substring(0, 30)}...` : template.name}</div>
                             </div>
-                        ) : (
-                            filteredTemplates.map((template) => (
-                                <div 
-                                    key={template.templateId} 
-                                    className={`${classes.letterItem} ${location.pathname === `/editor/${template.templateId}` ? classes.letterActive : ''}`}
-                                    onClick={() => {
-                                        // Navigate to the template editor
-                                        window.location.href = `/editor/${template.templateId}`;
-                                    }}
-                                >
-                                    <div>{formatDate(template.updatedAt)}</div>
-                                    <div>{template.name.length > 30 ? `${template.name.substring(0, 30)}...` : template.name}</div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                    
-                    <div className={classes.sharedTitle}>SHARED WITH YOU</div>
-                    <div className={classes.lettersList}>
-                        {Array.isArray(templates) && templates
-                            .filter(template => template.metadata?.isShared && template.metadata?.sharedWith?.includes('currentUser'))
-                            .map((template) => (
-                                <div 
-                                    key={template.templateId} 
-                                    className={`${classes.letterItem} ${location.pathname === `/editor/${template.templateId}` ? classes.letterActive : ''}`}
-                                    onClick={() => {
-                                        window.location.href = `/editor/${template.templateId}`;
-                                    }}
-                                >
-                                    <div>{formatDate(template.updatedAt)}</div>
-                                    <div>{template.name.length > 30 ? `${template.name.substring(0, 30)}...` : template.name}</div>
-                                    <div className={classes.sharedBy}>by {template.metadata?.author || 'Unknown'}</div>
-                                </div>
-                            ))
-                        }
-                        {!Array.isArray(templates) || templates.filter(template => template.metadata?.isShared && template.metadata?.sharedWith?.includes('currentUser')).length === 0 && (
-                            <div className={classes.emptyState}>No shared templates</div>
-                        )}
-                    </div>
+                        ))
+                    )}
                 </div>
+                
+                <div className={classes.sharedTitle}>SHARED WITH YOU</div>
+                <div className={classes.lettersList}>
+                    {Array.isArray(templates) && templates
+                        .filter(template => template.metadata?.isShared && template.metadata?.sharedWith?.includes('currentUser'))
+                        .map((template) => (
+                            <div 
+                                key={template.templateId} 
+                                className={`${classes.letterItem} ${location.pathname === `/editor/${template.templateId}` ? classes.letterActive : ''}`}
+                                onClick={() => {
+                                    window.location.href = `/editor/${template.templateId}`;
+                                }}
+                            >
+                                <div>{formatDate(template.updatedAt)}</div>
+                                <div>{template.name.length > 30 ? `${template.name.substring(0, 30)}...` : template.name}</div>
+                                <div className={classes.sharedBy}>by {template.metadata?.author || 'Unknown'}</div>
+                            </div>
+                        ))
+                    }
+                    {!Array.isArray(templates) || templates.filter(template => template.metadata?.isShared && template.metadata?.sharedWith?.includes('currentUser')).length === 0 && (
+                        <div className={classes.emptyState}>No shared templates</div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

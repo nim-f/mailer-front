@@ -6,7 +6,7 @@ import Button from "../Button/Button";
 import TextInput from "../TextInput/TextInput";
 
 // TODO: Move this to environment variable (REACT_APP_API_URL)
-const API_URL = "https://o1muw8cjaa.execute-api.us-east-1.amazonaws.com/dev";
+const API_URL = import.meta.env.VITE_API_URL;
 
 type User = {
     accessToken: string;

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import LayoutDropdown from "../../components/LayoutDropdown";
 import AddContentButton from "../../components/AddContentButton";
-import { EmailTemplate, Block, BlockType, sampleTemplate } from "../../types/emailTemplate";
+import { EmailTemplate, Block, BlockType, ImageVideoBlock, sampleTemplate } from '../../types/emailTemplate';
 import { BlockRenderer } from "../../components/EmailBlocks";
 import { v4 as uuidv4 } from 'uuid';
 import { saveTemplate, getTemplateById } from "../../services/templateService";
@@ -160,8 +160,8 @@ export const Editor = () => {
                     ...baseBlock,
                     type: 'image-video',
                     mediaType: 'image',
-                    url: 'https://via.placeholder.com/600x200',
-                    alt: 'Placeholder image'
+                    url: '', // Empty URL to trigger the upload UI
+                    alt: ''
                 };
             case 'body-text':
                 return {
@@ -193,7 +193,7 @@ export const Editor = () => {
                 return {
                     ...baseBlock,
                     type: 'footer',
-                    content: '© 2025 Your Company. All rights reserved.',
+                    content: ' 2025 Your Company. All rights reserved.',
                     includeUnsubscribe: true
                 };
             default:
@@ -357,6 +357,54 @@ export const Editor = () => {
         });
         
         console.log(`Updated body text formatting for block: ${id}`);
+    };
+    
+    const handleUpdateImageVideoContent = (id: string, updates: Partial<ImageVideoBlock>) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'image-video') {
+                return {
+                    ...block,
+                    ...updates
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated image/video content for block: ${id}`);
+    };
+    
+    const handleUpdateFooterContent = (id: string, content: string) => {
+        if (!template) return;
+        
+        // Find the block to update
+        const updatedBlocks = template.blocks.map(block => {
+            if (block.id === id && block.type === 'footer') {
+                return {
+                    ...block,
+                    content
+                };
+            }
+            return block;
+        });
+        
+        // Update the template
+        setTemplate({
+            ...template,
+            blocks: updatedBlocks,
+            updatedAt: new Date().toISOString()
+        });
+        
+        console.log(`Updated footer content for block: ${id}`);
     };
     
     const handleDeleteBlock = (id: string) => {
@@ -577,6 +625,8 @@ export const Editor = () => {
                                                         onUpdatePreHeaderContent={handleUpdatePreHeaderContent}
                                                         onUpdateBodyTextContent={handleUpdateBodyTextContent}
                                                         onUpdateBodyTextFormatting={handleUpdateBodyTextFormatting}
+                                                        onUpdateImageVideoContent={handleUpdateImageVideoContent}
+                                                        onUpdateFooterContent={handleUpdateFooterContent}
                                                     />
                                                     ))
                                                 }

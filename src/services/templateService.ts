@@ -1,7 +1,7 @@
 import { EmailTemplate } from '../types/emailTemplate';
 import Cookies from 'js-cookie';
 
-const API_URL = 'https://o1muw8cjaa.execute-api.us-east-1.amazonaws.com/dev';
+const API_URL = import.meta.env.VITE_API_URL;
 
 /**
  * Get the ID token from cookies using js-cookie library

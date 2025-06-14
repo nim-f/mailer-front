@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
 // TODO: Move this to environment variable (REACT_APP_API_URL)
-const API_URL = "https://o1muw8cjaa.execute-api.us-east-1.amazonaws.com/dev";
+const API_URL = import.meta.env.VITE_API_URL;
 
 async function getUser(): Promise<{
     userId: string;

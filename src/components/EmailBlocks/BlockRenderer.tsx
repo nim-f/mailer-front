@@ -22,6 +22,8 @@ interface BlockRendererProps {
   // BodyText block update props
   onUpdateBodyTextContent?: (id: string, content: string) => void;
   onUpdateBodyTextFormatting?: (id: string, formatting: any) => void;
+  // ImageVideo block update props
+  onUpdateImageVideoContent?: (id: string, updates: Partial<import('../../types/emailTemplate').ImageVideoBlock>) => void;
   // Footer block update props
   onUpdateFooterContent?: (id: string, content: string) => void;
 }
@@ -38,6 +40,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
   onUpdatePreHeaderContent,
   onUpdateBodyTextContent,
   onUpdateBodyTextFormatting,
+  onUpdateImageVideoContent,
   onUpdateFooterContent
 }) => {
   switch (block.type) {
@@ -73,6 +76,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
           onDelete={onDelete}
           onMove={onMove}
           isSelected={isSelected}
+          onUpdateContent={onUpdateImageVideoContent}
         />
       );
     case 'body-text':
