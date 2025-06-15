@@ -6,8 +6,10 @@ type ProtectedRouteProps = {
     error: Error | null | undefined;
 };
 
-export const ProtectedRoute = ({ user, error }: ProtectedRouteProps) => {
-    if (!user && error) {
+export const ProtectedRoute = ({ error }: ProtectedRouteProps) => {
+
+    console.log({error})
+    if (error) {
         return (
             <>
                 <Navigate to="/login" replace />
