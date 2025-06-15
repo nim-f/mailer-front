@@ -8,9 +8,13 @@ interface EditorHeaderProps {
     onSave?: () => void;
     isSaving?: boolean;
     onTitleChange?: (newTitle: string) => void;
+    isPreviewMode?: boolean;
+    onTogglePreview?: () => void;
+    onSendEmail?: () => void;
+    isSending?: boolean;
 }
 
-export const EditorHeader = ({ title, onSave, isSaving = false, onTitleChange }: EditorHeaderProps) => {
+export const EditorHeader = ({ title, onSave, isSaving = false, onTitleChange, isPreviewMode = false, onTogglePreview, onSendEmail, isSending = false }: EditorHeaderProps) => {
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [editedTitle, setEditedTitle] = useState(title);
     const titleInputRef = useRef<HTMLInputElement>(null);
@@ -99,7 +103,15 @@ export const EditorHeader = ({ title, onSave, isSaving = false, onTitleChange }:
                 <Button onClick={onSave} disabled={isSaving}>
                     {isSaving ? 'Saving...' : 'Save'}
                 </Button>
-                <Button>Preview</Button>
+                <Button
+                    onClick={onTogglePreview}
+                    className={isPreviewMode ? classes.activeTabButton : ''}
+                >
+                    {isPreviewMode ? 'Back to Editor' : 'Preview'}
+                </Button>
+                <Button onClick={onSendEmail} disabled={isSending}>
+                    {isSending ? 'Sending...' : 'Send'}
+                </Button>
                 <Button>Close</Button>
             </div>
         </div>

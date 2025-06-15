@@ -9,6 +9,9 @@ import { EmailTemplate, Block, BlockType, ImageVideoBlock, sampleTemplate } from
 import { BlockRenderer } from "../../components/EmailBlocks";
 import { v4 as uuidv4 } from 'uuid';
 import { saveTemplate, getTemplateById } from "../../services/templateService";
+import { generateEmailHtml } from "../../utils/emailRenderer";
+import { API_URL } from "../../utils/config";
+import Cookies from "js-cookie";
 
 export const Editor = () => {
     const { templateId } = useParams<{ templateId: string }>();
@@ -21,6 +24,8 @@ export const Editor = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [saveSuccess, setSaveSuccess] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
+    const [isPreviewMode, setIsPreviewMode] = useState(false);
+    const [isSending, setIsSending] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
     
     // Load existing template if templateId is provided
@@ -518,17 +523,61 @@ export const Editor = () => {
         }
     };
     
+    const previewHtml = template ? generateEmailHtml(template) : '<p>No content</p>';
+
+    const handleSendEmail = async () => {
+        if (!template) return;
+
+        // in a real app collect these from UI
+        const to = prompt('Recipient email address:');
+        const subject = template.name;
+        if (!to) return;
+        try {
+            setIsSending(true);
+            const token = Cookies.get('idToken');
+            const response = await fetch(`${API_URL}/send-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ to, subject, text: '', html: previewHtml }),
+            });
+            if (!response.ok) throw new Error('Failed to send email');
+            alert('Email sent successfully');
+        } catch (err) {
+            alert(err instanceof Error ? err.message : 'Error sending email');
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    const handleTogglePreview = () => setIsPreviewMode((prev) => !prev);
+
     return (
         <div className={classes.container}>
             <main className={classes.mainContent}>
-                <EditorHeader 
-                    title={template ? template.name : "Email Template Editor"} 
+                <EditorHeader
+                    title={template ? template.name : "Email Template Editor"}
                     onSave={handleSaveTemplate}
                     isSaving={isSaving}
                     onTitleChange={template ? handleTemplateNameChange : undefined}
+                    isPreviewMode={isPreviewMode}
+                    onTogglePreview={handleTogglePreview}
+                    onSendEmail={handleSendEmail}
+                    isSending={isSending}
                 />
                 <div className={classes.editorContent}>
-                    {isLoading ? (
+                    {isPreviewMode ? (
+                        <div className={classes.previewContainer}>
+                            {/* Using iframe for isolation */}
+                            <iframe
+                                title="Email Preview"
+                                srcDoc={previewHtml}
+                                style={{ width: '100%', height: '80vh', border: 'none' }}
+                            />
+                        </div>
+                    ) : isLoading ? (
                         <div className={classes.loadingState}>
                             <p>Loading template...</p>
                         </div>

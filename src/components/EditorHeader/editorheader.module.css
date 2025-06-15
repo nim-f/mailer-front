@@ -74,3 +74,8 @@
     outline: none;
     color: var(--text-colour);
 }
+
+.activeTabButton {
+    background-color: #2579FF;
+    color: #fff;
+}

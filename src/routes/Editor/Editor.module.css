@@ -286,3 +286,12 @@
   border-color: #2579FF;
   color: #2579FF;
 }
+
+.previewContainer {
+  width: 100%;
+  max-width: 900px;
+  margin: 24px auto;
+  border: 1px solid #E2EAF0;
+  border-radius: 8px;
+  overflow: hidden;
+}
